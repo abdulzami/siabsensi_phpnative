@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Newbie08_debe -->
+
+<head>
+    <script>
+        var id = localStorage.getItem("id");
+        var level = localStorage.getItem("level");
+        if (id == null && level == null) {
+            window.location.href = "../index.html";
+        }
+        if(level == "mahasiswa"){
+            window.location.href = "../index.html";
+        }else if(level == "dosen"){
+            window.location.href = "../index.html";
+        }
+    </script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <title>Hello, world!</title>
+</head>
+
+<body>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Sistem Informasi Absensi </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="home.html">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Data
+                    </a>
+                    <div class="dropdown-menu bg-light" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="data_dosen.html">Data Dosen</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Data Mahasiswa</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="data_matkul.html">Data Matkul</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="data_krs_mahasiswa.html">Data KRS Mahasiswa</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="laporan_absensi_mahasiswa.html">Laporan Absensi Mahasiswa</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Settings
+                    </a>
+                    <div class="dropdown-menu bg-light" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" id="logout" href="#">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="jumbotron jumbotron-fluid mt-5 pl-3">
+        <h1 class="display-4">Data Mahasiswa</h1>
+
+    </div>
+    <div>
+        <div class="float-left">
+            <button class="btn btn-dark ml-2 mb-4" data-toggle="modal" data-target="#exampleModal">Tambah</button>
+        </div>
+        <div class="float-right mr-2" >
+            <div>
+                <span class="badge badge-success" id="status"></span>
+            </div>
+            <div>
+                <a id="refreshButton"><span class="badge badge-secondary"></span></a>
+            </div>
+        </div>
+
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr id="kepala">
+                    <th id="anjay">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="isi2">
+
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tambah Mahasiswa</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">NIM:</label>
+                        <input type="text" class="form-control" id="inputNIM">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Nama:</label>
+                        <input type="text" class="form-control" id="inputNama">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Username:</label>
+                        <input type="text" class="form-control" id="inputUsername">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Password:</label>
+                        <input type="password" class="form-control" id="inputPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Konfirmasi Password:</label>
+                        <input type="password" class="form-control" id="inputKonfPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect2">Jurusan</label>
+                        <select class="form-control" id="inputJurusan">
+                            <option value="0">Pilih jurusan</option>
+                            <option value="Teknik Informatika">Teknik Informatika</option>
+                            <option value="Teknik Industri">Teknik Industri</option>
+                            <option value="Teknik Elektro">Teknik Elektro</option>
+                            <option value="Teknik Perkapalan">Teknik Perkapalan</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="button" id="btnTambahDosen" onclick="TambahMahasiswa()"
+                        class="btn btn-primary">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Mahasiswa</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">NIM:</label>
+                        <input type="text" class="form-control" id="einputNIM" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Nama:</label>
+                        <input type="text" class="form-control" id="einputNama">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Username:</label>
+                        <input type="text" class="form-control" id="einputUsername"><span id="UsernameCek"></span><span
+                            id="einputPassword"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect2">Jurusan</label>
+                        <select class="form-control" id="einputJurusan">
+                            <option value="0">Pilih jurusan</option>
+                            <option value="Teknik Informatika">Teknik Informatika</option>
+                            <option value="Teknik Industri">Teknik Industri</option>
+                            <option value="Teknik Elektro">Teknik Elektro</option>
+                            <option value="Teknik Perkapalan">Teknik Perkapalan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Password Baru <span
+                                class="badge badge-danger">tidak wajib</span> :</label>
+                        <input type="password" class="form-control" id="einputPasswordBaru">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="button" id="btnTambahDosen" onclick="UpdateMahasiswa()"
+                        class="btn btn-primary">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/sweetalert2.all.js"></script>
+    <script src="../assets/js/jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#exampleModalEdit,#exampleModal").modal({
+                show: false,
+                backdrop: 'static'
+            });
+        });
+        
+        const statustic = setInterval(function () {
+            if (navigator.onLine == true) {
+                var status = $("#status");
+                status.fadeIn(500);
+                status.removeClass("badge-danger");
+                status.addClass("badge-success");
+                status.text("Online");
+            } else if (navigator.onLine == false) {
+                var refresh = $("#refreshButton span");
+                refresh.fadeIn(500);
+                refresh.text("Refresh");
+                refresh.click(function () {
+                    location.reload();
+                })
+                var status = $("#status");
+                status.fadeIn(500);
+                status.removeClass("badge-success");
+                status.addClass("badge-danger");
+                status.text("Offline");
+            }
+        },200);
+    </script>
+    <script>
+        var respone;
+        var dataString = "readMahasiswa=";
+        $.ajax({
+            type: "POST",
+            url: "http://localhost/siabsensi_php/Mahasiswa.php",
+            data: dataString,
+            dataType: "JSON",
+            crossDomain: true,
+            cache: false,
+            success: function (response) {
+                $("#anjay").hide();
+                var kepala = $("#kepala");
+                kepala.append('<th scope="col">NIM</th><th scope="col">Nama</th><th scope="col">Username</th><th scope="col">Jurusan</th><th scope="col">Action</th>')
+                $.each(response, function (i, field) {
+                    var nim = field.nim;
+                    var nama = field.nama;
+                    var username = field.username;
+                    var password = field.password;
+                    var jurusan = field.jurusan;
+                    var isi = $("#isi2");
+                    isi.append("<tr><td>" + nim + "</td><td>" + nama + "</td><td> " + username + "</td><td>" + jurusan + "</td><td><button class='btn btn-info btn-sm mr-1 mb-1' onClick='Edit(" + nim + ")' id='tombolEdit' data-id='" + nim + "' data-toggle='modal' data-target='#exampleModalEdit' >Edit</button><button onClick='Hapus(" + nim + ")' class='btn btn-danger btn-sm mb-1' >Delete</button></td></tr>");
+                });
+            }
+        });
+        function Edit(nim) {
+            var dataString2 = "nim2=" + nim + "&readMahasiswaParam=";
+            $.ajax({
+                type: "POST",
+                url: "http://localhost/siabsensi_php/Mahasiswa.php",
+                data: dataString2,
+                dataType: "JSON",
+                crossDomain: true,
+                cache: false,
+                success: function (response) {
+                    $.each(response, function (i, field) {
+                        var nim = field.nim;
+                        var nama = field.nama;
+                        var username = field.username;
+                        var password = field.password;
+                        var jurusan = field.jurusan;
+                        $("#einputNIM").val(nim);
+                        $("#einputNama").val(nama);
+                        $("#einputUsername").val(username);
+                        $("#UsernameCek").val(username);
+                        $("#einputPassword").val(password);
+                        $("#einputJurusan").val(jurusan);
+                        $("#UsernameCek").hide();
+                    });
+                }
+            });
+        }
+
+        function UpdateMahasiswa() {
+            var in_nim = $("#einputNIM").val();
+            var in_nama = $("#einputNama").val();
+            var in_username = $("#einputUsername").val();
+            var username_cek = $("#UsernameCek").val();
+            var in_password = $("#einputPassword").val();
+            var in_passwordbaru = $("#einputPasswordBaru").val();
+            var in_jurusan = $("#einputJurusan").val();
+            var cek = "";
+            var tampungPass = "";
+            var versi = "";
+            if (in_username == username_cek) {
+                cek = "sama";
+            } else if (in_username != username_cek) {
+                cek = "tidaksama";
+            }
+
+            if (in_passwordbaru == "") {
+                tampungPass = in_password;
+                versi = "biasa";
+            } else {
+                tampungPass = in_passwordbaru;
+                versi = "baru";
+            }
+            var dataString = "nim=" + in_nim + "&nama=" + in_nama + "&username=" + in_username + "&password=" + tampungPass + "&jurusan=" + in_jurusan + "&cek=" + cek + "&updateMahasiswa=" + versi;
+            if ($.trim(in_nim).length > 0 & $.trim(in_nama).length > 0 & $.trim(in_username).length > 0 & $.trim(in_password).length > 0 & in_jurusan != 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost/siabsensi_php/Mahasiswa.php",
+                    data: dataString,
+                    crossDomain: true,
+                    cache: false,
+                    success: function (data) {
+                        if (data == "mahasiswaupdatesuccess") {
+                            Swal.fire(
+                                'Data berhasil diupdate!',
+                                '',
+                                'success'
+                            ).then(function () {
+                                location.reload();
+                            });
+                        } else if (data == "mahasiswaupdatefailed") {
+                            Swal.fire(
+                                'Data gagal diupdate!',
+                                'Cek kembali !',
+                                'error'
+                            )
+                        } else if (data == "usernamesama") {
+                            Swal.fire(
+                                'Data gagal diupdate!',
+                                'Gunakan Username lainnya !',
+                                'error'
+                            );
+                        } else {
+                            Swal.fire(
+                                'Data gagal diupdate!',
+                                'Toloooooong !',
+                                'error'
+                            );
+                        }
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: 'Semua data harus diisi !',
+                    type: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+        function TambahMahasiswa() {
+            var in_nim = $("#inputNIM").val();
+            var in_nama = $("#inputNama").val();
+            var in_username = $("#inputUsername").val();
+            var in_password = $("#inputPassword").val();
+            var in_konf_password = $("#inputKonfPassword").val();
+            var in_jurusan = $("#inputJurusan").val();
+
+            var dataString = "nim=" + in_nim + "&nama=" + in_nama + "&username=" + in_username + "&password=" + in_password + "&jurusan=" + in_jurusan + "&createMahasiswa=";
+
+            if ($.trim(in_nim).length > 0 & $.trim(in_nama).length > 0 & $.trim(in_username).length > 0 & $.trim(in_password).length > 0 & $.trim(in_konf_password).length > 0 & in_jurusan != 0) {
+                if (in_password == in_konf_password) {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost/siabsensi_php/Mahasiswa.php",
+                        data: dataString,
+                        crossDomain: true,
+                        cache: false,
+                        success: function (data) {
+                            if (data == "mahasiswacreatesuccess") {
+                                Swal.fire(
+                                    'Data berhasil ditambahkan!',
+                                    '',
+                                    'success'
+                                ).then(function () {
+                                    location.reload();
+                                });
+                            } else if (data == "mahasiswacreatefailed") {
+                                Swal.fire(
+                                    'Data gagal ditambakan!',
+                                    'NIM mungkin sudah ada!',
+                                    'error'
+                                )
+                            } else if (data == "usernamesama") {
+                                Swal.fire(
+                                    'Data gagal ditambakan!',
+                                    'Gunakan Username lainnya !',
+                                    'error'
+                                );
+                            } else {
+                                Swal.fire(
+                                    'Data gagal ditambakan!',
+                                    'tolong !',
+                                    'error'
+                                );
+                            }
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Hampir berhasil!',
+                        text: 'Password tidak sama !',
+                        type: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            }
+            else {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: 'Semua data harus diisi !',
+                    type: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            }
+            ;
+        }
+        function Hapus(nim) {
+            var dataString = "nim=" + nim + "&deleteMahasiswa=";
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: 'http://localhost/siabsensi_php/Mahasiswa.php',
+                        type: 'POST',
+                        data: dataString,
+                        success: function (response) {
+                            if (response == "mahasiswadeletesuccess") {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'Your file has been deleted.',
+                                    'success'
+                                ).then(function () {
+                                    location.reload();
+                                });
+
+                            } else {
+                                Swal.fire(
+                                    'Data gagal didelete!',
+                                    'Data ini telah terikat dengan data di tabel lainnya !',
+                                    'error'
+                                )
+                            }
+                        }
+                    });
+                }
+            })
+        }
+        $("#logout").click(function () {
+            Swal.fire(
+                'Logout berhasil!',
+                'Sampai jumpa !',
+                'success'
+            ).then(function () {
+                localStorage.removeItem("id");
+                localStorage.removeItem("level");
+                location.reload();
+            });
+
+        })
+        
+    </script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+</body>
+
+</html>
