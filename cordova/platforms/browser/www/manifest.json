@@ -1,0 +1,11 @@
+{
+  "background_color": "#FFF",
+  "display": "standalone",
+  "name": "SIAbsensi",
+  "short_name": "SIAbsensi",
+  "version": "io.kelompok7.siabsensi",
+  "description": "Aplikasi sederhana memudahkan proses absensi",
+  "author": "Kelompok 7",
+  "icons": [],
+  "start_url": "index.html"
+}

@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Newbie08_debe -->
+
+<head>
+    <script>
+        var id = localStorage.getItem("id");
+        var level = localStorage.getItem("level");
+        if (id == null && level == null) {
+            window.location.href = "../index.html";
+        }
+        if(level == "mahasiswa"){
+            window.location.href = "../index.html";
+        }else if(level == "dosen"){
+            window.location.href = "../index.html";
+        }
+    </script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <title>Hello, world!</title>
+</head>
+
+<body>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Sistem Informasi Absensi </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="home.html">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Data
+                    </a>
+                    <div class="dropdown-menu bg-light" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="data_dosen.html">Data Dosen</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="data_mahasiswa.html">Data Mahasiswa</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="data_matkul.html">Data Matkul</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Data KRS Mahasiswa</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="laporan_absensi_mahasiswa.html">Laporan Absensi Mahasiswa</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Settings
+                    </a>
+                    <div class="dropdown-menu bg-light" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" id="logout" href="#">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="jumbotron jumbotron-fluid mt-5 pl-3">
+        <h1 class="display-4">Data KRS Mahasiswa</h1>
+
+    </div>
+    <div>
+        <div class="float-left">
+            <button class="btn btn-dark ml-2 mb-4" data-toggle="modal" data-target="#exampleModal">Tambah</button>
+        </div>
+        <div class="float-right mr-2" >
+            <div>
+                <span class="badge badge-success" id="status"></span>
+            </div>
+            <div>
+                <a id="refreshButton"><span class="badge badge-secondary"></span></a>
+            </div>
+        </div>
+
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr id="kepala">
+                    <th id="anjay">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="isi2">
+
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tambah KRS</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">ID KRS:</label>
+                        <input type="text" class="form-control" id="inputID">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Mahasiswa:</label>
+                        <select class="form-control" id="inputMahasiswa">
+                            <option value="0">Pilih Mahasiswa</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Matkul:</label>
+                        <select class="form-control" id="inputMatkul">
+                            <option value="0">Pilih Matkul</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="button" onclick="TambahKrs()" class="btn btn-primary">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit KRS</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">ID KRS:</label>
+                        <input type="text" class="form-control" id="einputID" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Mahasiswa:</label><span id="nimCek"></span>
+                        <select class="form-control" id="einputMahasiswa">
+                            <option value="0">Pilih Mahasiswa</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Matkul:</label><span id="idMkCek"></span>
+                        <select class="form-control" id="einputMatkul">
+                            <option value="0">Pilih Matkul</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="button" onclick="UpdateKrs()" class="btn btn-primary">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/sweetalert2.all.js"></script>
+    <script src="../assets/js/jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#exampleModalEdit,#exampleModal").modal({
+                show: false,
+                backdrop: 'static'
+            });
+        });
+
+        const statustic = setInterval(function () {
+            if (navigator.onLine == true) {
+                var status = $("#status");
+                status.fadeIn(500);
+                status.removeClass("badge-danger");
+                status.addClass("badge-success");
+                status.text("Online");
+            } else if (navigator.onLine == false) {
+                var refresh = $("#refreshButton span");
+                refresh.fadeIn(500);
+                refresh.text("Refresh");
+                refresh.click(function () {
+                    location.reload();
+                })
+                var status = $("#status");
+                status.fadeIn(500);
+                status.removeClass("badge-success");
+                status.addClass("badge-danger");
+                status.text("Offline");
+            }
+        },200);
+    </script>
+    <script>
+        var respone;
+        var dataString = "readKrs=";
+        $.ajax({
+            type: "POST",
+            url: "https://kelompok7pweb.000webhostapp.com/progpresensi_two/Krs.php",
+            data: dataString,
+            dataType: "JSON",
+            crossDomain: true,
+            cache: false,
+            success: function (response) {
+                $("#anjay").hide();
+                var kepala = $("#kepala");
+                kepala.append('<th scope="col">ID KRS</th><th scope="col">NIM</th><th scope="col">Nama Mahasiswa</th><th scope="col">Nama Matkul</th><th scope="col">Action</th>')
+                $.each(response, function (i, field) {
+                    var id_krs = field.id_krs;
+                    var nim = field.nim;
+                    var nama_mk = field.nama_matkul;
+                    var nama_mhs = field.nama;
+                    var id_matkul = field.id_matkul;
+                    var isi = $("#isi2");
+                    isi.append("<tr><td>" + id_krs + "</td><td>" + nim + "</td><td> " + nama_mhs + "</td><td>" + nama_mk + "(" + id_matkul + ")" + "</td><td><button class='btn btn-info btn-sm mr-1 mb-1' onClick='Edit(" + id_krs + ")' id='tombolEdit' data-id='" + id_krs + "' data-toggle='modal' data-target='#exampleModalEdit' >Edit</button><button onClick='Hapus(" + id_krs + ")' class='btn btn-danger btn-sm mb-1' >Delete</button></td></tr>");
+                });
+            }
+        });
+        var dataString = "readMahasiswa2=";
+        $.ajax({
+            type: "POST",
+            url: "https://kelompok7pweb.000webhostapp.com/progpresensi_two/Mahasiswa.php",
+            data: dataString,
+            dataType: "JSON",
+            crossDomain: true,
+            cache: false,
+            success: function (response) {
+                $.each(response, function (i, field) {
+                    var nim = field.nim;
+                    var nama = field.nama;
+                    var mahasiswa = $("#inputMahasiswa");
+                    var emahasiswa = $("#einputMahasiswa");
+                    mahasiswa.append("<option value='" + nim + "'>" + nim + "-" + nama + "</option>");
+                    emahasiswa.append("<option value='" + nim + "'>" + nim + "-" + nama + "</option>")
+                });
+            }
+        });
+        var dataString = "readMatkul2=";
+        $.ajax({
+            type: "POST",
+            url: "https://kelompok7pweb.000webhostapp.com/progpresensi_two/Matkul.php",
+            data: dataString,
+            dataType: "JSON",
+            crossDomain: true,
+            cache: false,
+            success: function (response) {
+                $.each(response, function (i, field) {
+                    var id_matkul = field.id_matkul;
+                    var nama_mk = field.nama_matkul;
+                    var matkul = $("#inputMatkul");
+                    var ematkul = $("#einputMatkul");
+                    matkul.append("<option value='" + id_matkul + "'>" + id_matkul + "-" + nama_mk + "</option>");
+                    ematkul.append("<option value='" + id_matkul + "'>" + id_matkul + "-" + nama_mk + "</option>")
+                });
+            }
+        });
+        function Edit(id) {
+            var dataString2 = "id_krs=" + id + "&readKrsParam=";
+            $.ajax({
+                type: "POST",
+                url: "https://kelompok7pweb.000webhostapp.com/progpresensi_two/Krs.php",
+                data: dataString2,
+                dataType: "JSON",
+                crossDomain: true,
+                cache: false,
+                success: function (response) {
+                    $.each(response, function (i, field) {
+                        var id = field.id_krs;
+                        var nim = field.nim;
+                        var id_matkul = field.id_matkul;
+                        $("#einputID").val(id);
+                        $("#einputMahasiswa").val(nim);
+                        $("#einputMatkul").val(id_matkul);
+                        $("#idMkCek").val(id_matkul);
+                        $("#nimCek").val(nim);
+                    });
+                }
+            });
+        }
+
+        function UpdateKrs() {
+            var id = $("#einputID").val();
+            var nim = $("#einputMahasiswa").val();;
+            var id_matkul = $("#einputMatkul").val();
+            var nim_cek = $("#nimCek").val();
+            var idmk_cek = $("#idMkCek").val();
+            var cek = "";
+            if (nim == nim_cek & id_matkul == idmk_cek) {
+                cek = "sama";
+            } else {
+                cek = "lolos";
+            }
+
+            var dataString = "id_krs=" + id + "&nim=" + nim + "&id_matkul=" + id_matkul + "&cek=" + cek + "&updateKrs";
+            if (nim != 0 & id_matkul != 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "https://kelompok7pweb.000webhostapp.com/progpresensi_two/Krs.php",
+                    data: dataString,
+                    crossDomain: true,
+                    cache: false,
+                    success: function (data) {
+                        if (data == "krsupdatesuccess") {
+                            Swal.fire(
+                                'Data berhasil diupdate!',
+                                '',
+                                'success'
+                            ).then(function () {
+                                location.reload();
+                            });
+                        } else if (data == "krsupdatefailed") {
+                            Swal.fire(
+                                'Data gagal diupdate!',
+                                'Cek kembali !',
+                                'error'
+                            )
+                        } else if (data == "krsada") {
+                            Swal.fire(
+                                'Data gagal diupdate!',
+                                'KRS pernah dilakukan dengan data ini!',
+                                'error'
+                            )
+                        } else {
+                            Swal.fire(
+                                'Data gagal diupdate!',
+                                'Toloooooong !',
+                                'error'
+                            );
+                        }
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: 'Semua data harus diisi !',
+                    type: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+        function TambahKrs() {
+            var id = $("#inputID").val();
+            var nim = $("#inputMahasiswa").val();;
+            var id_matkul = $("#inputMatkul").val();
+
+            var dataString = "id_krs=" + id + "&nim=" + nim + "&id_matkul=" + id_matkul + "&createKrs";
+            console.log(dataString)
+            if ($.trim(id) > 0 & nim != 0 & id_matkul != 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "https://kelompok7pweb.000webhostapp.com/progpresensi_two/Krs.php",
+                    data: dataString,
+                    crossDomain: true,
+                    cache: false,
+                    success: function (data) {
+                        if (data == "krscreatesuccess") {
+                            Swal.fire(
+                                'Data berhasil ditambahkan!',
+                                '',
+                                'success'
+                            ).then(function () {
+                                location.reload();
+                            });
+                        } else if (data == "krscreatefailed") {
+                            Swal.fire(
+                                'Data gagal ditambakan!',
+                                'ID KRS mungkin sudah ada!',
+                                'error'
+                            )
+                        } else if (data == "krsada") {
+                            Swal.fire(
+                                'Data gagal ditambakan!',
+                                'KRS pernah dilakukan dengan data ini!',
+                                'error'
+                            )
+                        } else {
+                            Swal.fire(
+                                'Data gagal ditambakan!',
+                                'tolong !',
+                                'error'
+                            );
+                        }
+                    }
+                });
+            }
+            else {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: 'Semua data harus diisi !',
+                    type: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            }
+            ;
+        }
+        function Hapus(id) {
+            var dataString = "id_krs=" + id + "&deleteKrs=";
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: 'https://kelompok7pweb.000webhostapp.com/progpresensi_two/Krs.php',
+                        type: 'POST',
+                        data: dataString,
+                        success: function (response) {
+                            if (response == "krsdeletesuccess") {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'Your file has been deleted.',
+                                    'success'
+                                ).then(function () {
+                                    location.reload();
+                                });
+
+                            } else {
+                                Swal.fire(
+                                    'Data gagal didelete!',
+                                    'Data ini telah terikat dengan data di tabel lainnya !',
+                                    'error'
+                                )
+                            }
+                        }
+                    });
+                }
+            })
+        }
+        $("#logout").click(function () {
+            Swal.fire(
+                'Logout berhasil!',
+                'Sampai jumpa !',
+                'success'
+            ).then(function () {
+                localStorage.removeItem("id");
+                localStorage.removeItem("level");
+                location.reload();
+            });
+
+        })
+        
+    </script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+</body>
+
+</html>

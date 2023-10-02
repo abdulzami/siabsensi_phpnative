@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <script>
+        var id = localStorage.getItem("id");
+        var level = localStorage.getItem("level");
+        if (id == null && level == null) {
+            window.location.href = "../index.html";
+        }
+        if (level == "mahasiswa") {
+            window.location.href = "../index.html";
+        } else if (level == "admin") {
+            window.location.href = "../index.html";
+        }
+    </script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <title>Hello, world!</title>
+</head>
+
+<body class="bg-light">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Sistem Informasi Absensi </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Settings
+                    </a>
+                    <div class="dropdown-menu bg-light" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" id="logout" href="#">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="jumbotron jumbotron-fluid mt-5 pl-3 mb-3">
+        <h1 class="display-4">Home</h1>
+        <p class="lead">Sistem Informasi Absensi<br><span id="idla" class="badge badge-secondary"></span></p>
+    </div>
+
+    <div class="mr-3 ml-3">
+        <span class="badge badge-warning mb-3" id="status">Internet Status . . .</span>
+            <p class="lead">Jadwal matkul yang diajar hari ini</p>
+            <div class="dropdown-divider mb-3"></div>
+        <div id="sorter">
+
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border text-danger" id="loading" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- MODAL -->
+    <div class="modal fade" id="exampleModalAbsen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" id="dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Form Absen</h5>
+                    <button type="button" class="close" id="silang" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- hidden input -->
+                    <span id="inputID"></span>
+                    <div class="form-group" id="alerte">
+                        <div class="alert alert-info" role="alert"></div>
+                    </div>
+                    <div class="form-group" id="formID">
+                        <label for="message-text" class="col-form-label">Status:</label>
+                        <select class="form-control" id="inputStatus">
+                            <option value="nol">Pilih Status</option>
+                            <option value="masuk">Masuk</option>
+                            <option value="izin">Izin</option>
+                            <option value="sakit">Sakit</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="deskripsi">
+                        <label for="exampleFormControlTextarea1">Deskripsi</label>
+                        <textarea class="form-control" id="inputDeskripsi" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group" id="moda">
+                        <label for="message-text" class="col-form-label">Moda:</label>
+                        <select class="form-control" id="inputModa">
+                            <option value="0">Pilih Moda</option>
+                            <option value="daring">Daring</option>
+                            <option value="tatapmuka">Tatap Muka</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="persyaratanTatapMuka">
+                        <button class="btn btn-success btn-sm mb-2 mt-2" onclick="clearLokasi()">Ambil Lokasi
+                            sekarang</button>
+                        <div id="lokasi">
+                            <label class="col-form-label">
+                                <div class='alert alert-success'>Lokasi Sekarang :</div>
+                            </label>
+                        </div>
+                        <div style="margin-top: -10px;" class="alert alert-secondary" id="jarak">
+                            Detail : <br>
+                            <div class="spinner-border text-secondary" id="coy3">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <span id="long">
+                                <div class='badge badge-dark'></div>
+                            </span>
+                            <span id="lat">
+                                <div class='badge badge-dark'></div>
+                            </span>
+                            <span id="njarak">
+                                <div class='badge badge-secondary'></div>
+                            </span>
+                            <span id="bolegak">
+                                <div class='badge badge-success'></div>
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="spinner-border text-secondary" id="coy2">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <button type="button" class="btn btn-secondary ml-2" id="tutup" data-dismiss="modal">Tutup</button>
+                    <button type="button" onclick="masukAbsen()" id="masukBtn" class="btn btn-primary">Absen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../assets/js/sweetalert2.all.js"></script>
+    <script>
+        //if page open
+        $(document).ready(function () {
+            $("#exampleModalAbsen").modal({
+                show: false,
+                backdrop: 'static'
+            });
+            $("#coy2").hide();
+            $("#coy3").hide();
+            $("#formID").hide();
+            $("#deskripsi").hide();
+            $("#masukBtn").hide();
+            $("#alerte").hide();
+            $("#moda").hide();
+            $("#persyaratanTatapMuka").hide();
+            
+        });
+
+        //PERTANGGALAN
+        function getNamaHari() {
+            var arrHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            var date = new Date();
+            var hariIni = arrHari[date.getDay()];
+            return hariIni;
+        }
+        function getJam() {
+            var date = new Date();
+            var str = date.toString();
+            var strS = str.split(" ");
+            var time = strS[4];
+            var oke = time.substr(0, 5);
+            return oke;
+        }
+        function getTanggalNow() {
+            var date = new Date();
+            var str = date.toString();
+            var strS = str.split(" ");
+            var bulan = date.getMonth() + 1;
+            if (bulan <= 9) {
+                bulan = bulan.toString();
+                bulan = "0" + bulan;
+            }
+            var tanggal = strS[2];
+            var tahun = strS[3];
+            var gabung = tahun + "-" + bulan + "-" + tanggal;
+            return gabung;
+        }
+        //END PERTANGGALAN
+
+        //MATKUL NOW
+        function matkulHariIni() {
+            var dataString = "nip=" + localStorage.getItem("id") + "&hari=" + getNamaHari() + "&readAbsen=";
+            $.ajax({
+                type: "POST",
+                url: "https://kelompok7pweb.000webhostapp.com/progpresensi_two/Matkul.php",
+                data: dataString,
+                dataType: "JSON",
+                crossDomain: true,
+                cache: false,
+                beforeSend: function () {
+
+                },
+                success: function (response) {
+                    if (response.st == "kosong") {
+                        var gd = `<div class="card bg-danger text-white mb-3">
+                                <div class="card-header">
+                                    Tidak ada matkul yang diajar hari ini
+                                </div>
+                            </div>`;
+                        $("#loading").hide();
+                        $("#sorter").append(gd);
+
+                    } else {
+                        $.each(response, function (i, field) {
+                            var id_matkul = field.id_matkul;
+                            var nama_matkul = field.nama_matkul;
+                            var jam_mulai = field.mulai_jam;
+                            var jam_akhir = field.akhir_jam;
+                            var jam = jam_mulai + " - " + jam_akhir;
+                            var jm_pt = field.jumlah_pertemuan;
+
+                            function meta(nama_matkul, jam, id_matkul) {
+                                var w, x, y, yorn;
+                                if (getJam() < jam_mulai) {
+                                    w = "warning";
+                                    y = "d-none";
+                                } else if (getJam() >= jam_akhir) {
+                                    w = "danger";
+                                    y = "d-none";
+                                } else if (jm_pt == 0) {
+                                    jam = "Semua pertemuan sudah ditempuh"
+                                    yorn = "d-none";
+                                    w = "danger";
+                                    y = "d-none";
+                                } else {
+                                    w = "success";
+                                    y = " ";
+                                }
+                                var thePlot = `<div class="card mb-3">
+                                            <div class="card-header">
+                                                ${nama_matkul}
+                                            </div>
+                                            <div class="card-body bg-light">
+                                                <span class="badge badge-${w} ">
+                                                    <p class="card-text ">Jam : ${jam}</p>
+                                                </span><br>
+                                                <span class="badge badge-info">
+                                                    <p class="card-text">Sisa jumlah pertemuan : ${jm_pt}</p>
+                                                </span>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="float-right">
+                                                    <button class="btn btn-light border-dark ${y}" id="btnAbsen"  data-toggle="modal" data-target="#exampleModalAbsen" onclick="openModalAbsen(${id_matkul})">Absen</button>
+                                                </div>
+                                            </div>
+                                        </div>`;
+
+                                return thePlot;
+                            }
+
+                            $("#sorter").append(meta(nama_matkul, jam, id_matkul));
+                            $("#loading").hide();
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire(
+                        'ERROR !',
+                        'Internet anda offline atau server sibuk !',
+                        'error'
+                    ).then(function () {
+                        location.reload();
+                    });
+                }
+            });
+        };
+
+        // END MATKUL NOW
+        function openModalAbsen(id_matkul) {
+            var tanggal = getTanggalNow();
+            var dataString = "&id_matkul=" + id_matkul + "&waktu_masuk=" + tanggal + "&cekAbsen=";
+            $.ajax({
+                type: "POST",
+                url: "https://kelompok7pweb.000webhostapp.com/progpresensi_two/DosenMasuk.php",
+                data: dataString,
+                dataType: "text",
+                crossDomain: true,
+                cache: false,
+                beforeSend: function () {
+                    $("#coy2").show();
+                },
+                success: function (response) {
+                    if (response == "ada") {
+                        absenSudahAda();
+                        $("#coy2").hide();
+                    } else {
+                        silahkanAbsen(id_matkul);
+                        $("#coy2").hide();
+                    }
+                },
+                error: function () {
+                    Swal.fire(
+                        'ERROR !',
+                        'Internet anda offline atau server sibuk !',
+                        'error'
+                    ).then(function () {
+                        location.reload();
+                    });
+                }
+            });
+        };
+
+        function silahkanAbsen(id_matkul) {
+            $("#alerte").show();
+            $("#alerte div").text("Waktu sudah tepat, silahkan absen !");
+            $("#formID").show();
+            $("#moda").show();
+            $("#inputID").val(id_matkul);
+            $("#masukBtn").show();
+        }
+
+        function tampilDeskripsi() {
+            $("#deskripsi").hide();
+            $("#inputDeskripsi").val("nol");
+            $("#inputStatus").change(function () {
+                if ($(this).val() == "masuk" || $(this).val() == "nol") {
+                    $("#deskripsi").hide();
+                    $("#inputDeskripsi").val("null");
+                    $("#moda").show();
+                } else {
+                    $("#moda").hide();
+                    $("#persyaratanTatapMuka").hide();
+                    $("#deskripsi").show();
+                    $("#inputDeskripsi").val("");
+                    $("#inputModa").val("0");
+                }
+            });
+            $("#inputModa").change(function () {
+                if ($(this).val() == "daring" || $(this).val() == "0") {
+                    $("#persyaratanTatapMuka").hide();
+                } else {
+                    $("#persyaratanTatapMuka").show();
+                }
+            });
+        }
+
+        function absenSudahAda() {
+            $("#formID").hide();
+            $("#deskripsi").hide();
+            $("#moda").hide();
+            $("#masukBtn").hide();
+            $("#alerte").show();
+            $("#alerte div").text("Anda sudah absen untuk matkul ini.");
+        }
+
+        function masukAbsen() {
+            var id_matkul = $("#inputID").val();
+            var status = $("#inputStatus").val();
+            var deskripsi = $("#inputDeskripsi").val();
+            var moda = $("#inputModa").val();
+            var long = "";
+            var lat = "";
+
+            if (moda == "daring") {
+                long = "gada";
+                lat = "gada";
+            } else if (moda == "tatapmuka") {
+                long = $("#jarak #long").val();
+                lat = $("#jarak #lat").val();
+            } else {
+                long = "gada";
+                lat = "gada";
+            }
+
+            var dataString = "id_matkul=" + id_matkul + "&waktumasuk=" + getTanggalNow() + "&status=" + status + "&deskripsi=" + deskripsi + "&longitude=" + long + "&latitude=" + lat + "&mode=" + moda + "&masukAbsen=";
+            if (status == "nol") {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: 'Status haus diisi !',
+                    type: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            } else if (status == "masuk") {
+                if (moda == "0") {
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: 'Semua data harus diisi !',
+                        type: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                } else if (moda == "tatapmuka") {
+                    if ($("#jarak #bolegak").val() == "bole") {
+                        ekesekusi(dataString);
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal!',
+                            text: 'Lokasi tidak terpenuhi !',
+                            type: 'warning',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }else{
+                    ekesekusi(dataString);
+                }
+            } else if (status == "izin" || status == "sakit") {
+                if (deskripsi == "nol" || deskripsi == "") {
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: 'Semua data harus diisi !',
+                        type: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    ekesekusi(dataString);
+                }
+            }
+        }
+
+
+
+        function ekesekusi(dataku) {
+            Swal.fire({
+                title: 'Apakah anda yakin ?',
+                text: "Absen ini tidak bisa diubah lagi !",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, absen!'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: "https://kelompok7pweb.000webhostapp.com/progpresensi_two/DosenMasuk.php",
+                        data: dataku,
+                        crossDomain: true,
+                        cache: false,
+                        success: function (data) {
+                            if (data == "dosenabsensuccess") {
+                                Swal.fire(
+                                    'Anda berhasil absen !',
+                                    '',
+                                    'success'
+                                ).then(function () {
+                                    location.reload();
+                                });
+                            } else if (data == "dosenabsenfailed") {
+                                Swal.fire(
+                                    'Anda gagal absen!',
+                                    'Mungkin ada salah saat input data!',
+                                    'error'
+                                )
+                            } else if (data == "dosenabsensuccesstanpa") {
+                                Swal.fire(
+                                    'Anda berhasil absen tanpa mengurangi jumlah pertemuan !',
+                                    '',
+                                    'success'
+                                ).then(function () {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire(
+                                    'Data gagal ditambakan!',
+                                    'Internet anda offline atau server sibuk !',
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function () {
+                            Swal.fire(
+                                'ERROR !',
+                                'Internet anda offline atau server sibuk !',
+                                'error'
+                            ).then(function () {
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            })
+        }
+
+        //CLOSE MODAL
+        $("#tutup").click(function () {
+            $("#alerte div").text(" ");
+            $("#formID").hide();
+            $("#deskripsi").hide();
+            $("#moda").hide();
+            $("#masukBtn").hide();
+            $("#inputStatus").val("nol");
+            $("#inputModa").val("0");
+            $("#persyaratanTatapMuka").hide();
+        });
+
+        $("#silang").click(function () {
+            $("#alerte div").text("");
+            $("#formID").hide();
+            $("#deskripsi").hide();
+            $("#moda").hide();
+            $("#masukBtn").hide();
+            $("#inputStatus").val("nol");
+            $("#inputModa").val("0");
+            $("#persyaratanTatapMuka").hide();
+        });
+
+        function clearLokasi() {
+            $("#jarak #long").val("");
+            $("#jarak #lat").val("");
+            $("#jarak #jarak").val("");
+            $("#lokasi label div").text("Lokasi Sekarang :");
+            $("#jarak #njarak div").text("");
+            $("#jarak #long div").text("");
+            $("#jarak #lat div").text("");
+            $("#jarak #bolegak div").val("");
+            $("#jarak #bolegak div").text("");
+            $("#coy3").show();
+            cari();
+        }
+
+        //GEOLOCATION
+        function distance(lon1, lat1, lon2, lat2) {
+            var R = 6371;
+            var dLat = (lat2 - lat1).toRad();
+            var dLon = (lon2 - lon1).toRad();
+            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            var d = R * c;
+            return d;
+        }
+
+        if (typeof (Number.prototype.toRad) === "undefined") {
+            Number.prototype.toRad = function () {
+                return this * Math.PI / 180;
+            }
+        }
+
+        var positionOption = { timeout: 500 };
+        var gpsFailed = function () {
+            Swal.fire(
+                'Lokasi tidak akan pernah diambil !',
+                'Hidupkan lokasi untuk mengambil lokasi anda sekarang !',
+                'error'
+            )
+        }
+
+        function cari() {
+            navigator.geolocation.getCurrentPosition(getLokasi, gpsFailed, positionOption);
+        }
+
+        function getLokasi(pos) {
+            var jarak = distance(pos.coords.longitude, pos.coords.latitude, 112.615223, -7.1611302);
+            jarak = jarak.toFixed(3);
+            var locApi = "https://api.opencagedata.com/geocode/v1/json?q=" + pos.coords.latitude + "+" + pos.coords.longitude + "&key=51349b64c9d14769ad1a418ecba8d004";
+            $("#jarak #long").val(pos.coords.longitude);
+            $("#jarak #lat").val(pos.coords.latitude);
+            $("#jarak #jarak").val(jarak);
+            $("#jarak #njarak div").text("Jarak ke kampus : " + jarak.toString().replace(".", ",") + " Kilometer");
+            $("#jarak #long div").text("Longitude : " + pos.coords.longitude.toString().replace(".", ","));
+            $("#jarak #lat div").text("Latitude : " + pos.coords.latitude.toString().replace(".", ","));
+            if (jarak <= 0.050) {
+                $("#jarak #bolegak").val("bole");
+                $("#jarak #bolegak div").text("Lokasi absen terpenuhi");
+            } else {
+                $("#jarak #bolegak").val("gakbole");
+                $("#jarak #bolegak div").removeClass("badge-success");
+                $("#jarak #bolegak div").addClass("badge-danger");
+                $("#jarak #bolegak div").text("Lokasi absen tidak terpenuhi, tidak bisa absen");
+            }
+            $("#coy3").hide();
+            $.get({
+                url: locApi,
+                success: function (data) {
+                    $("#lokasi label div").text("Lokasi Sekarang : " + data.results[0].formatted);
+                }
+            })
+        }
+        //END GEOLOCATION
+
+        //DEFAULT
+        const statustic = setInterval(function () {
+            if (navigator.onLine == true) {
+                var status = $("#status");
+                status.fadeIn(500);
+                status.removeClass("badge-danger");
+                status.removeClass("badge-warning");
+                status.addClass("badge-success");
+                status.text("Online");
+            } else if (navigator.onLine == false) {
+                var status = $("#status");
+                status.fadeIn(500);
+                status.removeClass("badge-success");
+                status.addClass("badge-danger");
+                status.text("Offline");
+            }
+        }, 200);
+        $("#idla").html("Dosen " + localStorage.getItem("id"));
+        $("#logout").click(function () {
+            Swal.fire(
+                'Logout berhasil!',
+                'Sampai jumpa !',
+                'success'
+            ).then(function () {
+                localStorage.removeItem("id");
+                localStorage.removeItem("level");
+                location.reload();
+            });
+
+        });
+
+        //executing function
+        matkulHariIni();
+        tampilDeskripsi();
+    </script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+</body>
+
+</html>

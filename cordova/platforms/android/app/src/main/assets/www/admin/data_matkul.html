@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Newbie08_debe -->
+
+<head>
+    <script>
+        var id = localStorage.getItem("id");
+        var level = localStorage.getItem("level");
+        if (id == null && level == null) {
+            window.location.href = "../index.html";
+        }
+        if(level == "mahasiswa"){
+            window.location.href = "../index.html";
+        }else if(level == "dosen"){
+            window.location.href = "../index.html";
+        }
+    </script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <title>Hello, world!</title>
+</head>
+
+<body>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Sistem Informasi Absensi </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="home.html">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Data
+                    </a>
+                    <div class="dropdown-menu bg-light" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="data_dosen.html">Data Dosen</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="data_mahasiswa.html">Data Mahasiswa</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Data Matkul</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="data_krs_mahasiswa.html">Data KRS Mahasiswa</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="laporan_absensi_mahasiswa.html">Laporan Absensi Mahasiswa</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Settings
+                    </a>
+                    <div class="dropdown-menu bg-light" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" id="logout" href="#">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="jumbotron jumbotron-fluid mt-5 pl-3">
+        <h1 class="display-4">Data Matkul</h1>
+
+    </div>
+    <div>
+        <div class="float-left">
+            <button class="btn btn-dark ml-2 mb-4" data-toggle="modal" data-target="#exampleModal">Tambah</button>
+        </div>
+        <div class="float-right mr-2" >
+            <div>
+                <span class="badge badge-success" id="status"></span>
+            </div>
+            <div>
+                <a id="refreshButton"><span class="badge badge-secondary"></span></a>
+            </div>
+        </div>
+
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr id="kepala">
+                    <th id="anjay">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="isi2">
+
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tambah Matkul</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">ID Matkul:</label>
+                        <input type="number" class="form-control" id="inputID">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Nama Matkul:</label>
+                        <input type="text" class="form-control" id="inputNamaMk">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Hari:</label>
+                        <select class="form-control" id="inputHari">
+                            <option value="0">Pilih Hari</option>
+                            <option value="Minggu">Minggu</option>
+                            <option value="Senin">Senin</option>
+                            <option value="Selasa">Selasa</option>
+                            <option value="Rabu">Rabu</option>
+                            <option value="Kamis">Kamis</option>
+                            <option value="Jumat">Jumat</option>
+                            <option value="Sabtu">Sabtu</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Mulai Jam:</label>
+                        <input type="time" class="form-control" id="inputMulai">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Akhir Jam:</label>
+                        <input type="time" class="form-control" id="inputAkhir">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect2">Jurusan</label>
+                        <select class="form-control" id="inputJurusan">
+                            <option value="0">Pilih jurusan</option>
+                            <option value="Teknik Informatika">Teknik Informatika</option>
+                            <option value="Teknik Industri">Teknik Industri</option>
+                            <option value="Teknik Elektro">Teknik Elektro</option>
+                            <option value="Teknik Perkapalan">Teknik Perkapalan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Jumlah Pertemuan</label>
+                        <input type="number" class="form-control" id="inputJumlah">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect2">Dosen</label>
+                        <select class="form-control" id="inputDosen">
+                            <option value='0'>Pilih Dosen</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="button" onclick="TambahMatkul()" class="btn btn-primary">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Matkul</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">ID Matkul:</label>
+                        <input type="text" class="form-control" id="einputID" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Nama Matkul:</label>
+                        <input type="text" class="form-control" id="einputNamaMk">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Hari:</label>
+                        <select class="form-control" id="einputHari">
+                            <option value="0">Pilih Hari</option>
+                            <option value="Minggu">Minggu</option>
+                            <option value="Senin">Senin</option>
+                            <option value="Selasa">Selasa</option>
+                            <option value="Rabu">Rabu</option>
+                            <option value="Kamis">Kamis</option>
+                            <option value="Jumat">Jumat</option>
+                            <option value="Sabtu">Sabtu</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Mulai:</label>
+                        <input type="time" class="form-control" id="einputMulai">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Akhir:</label>
+                        <input type="time" class="form-control" id="einputAkhir">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="button" onclick="UpdateMatkul()" class="btn btn-primary">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/sweetalert2.all.js"></script>
+    <script src="../assets/js/jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#exampleModalEdit,#exampleModal").modal({
+                show: false,
+                backdrop: 'static'
+            });
+        });
+        
+        const statustic = setInterval(function () {
+            if (navigator.onLine == true) {
+                var status = $("#status");
+                status.fadeIn(500);
+                status.removeClass("badge-danger");
+                status.addClass("badge-success");
+                status.text("Online");
+            } else if (navigator.onLine == false) {
+                var refresh = $("#refreshButton span");
+                refresh.fadeIn(500);
+                refresh.text("Refresh");
+                refresh.click(function () {
+                    location.reload();
+                })
+                var status = $("#status");
+                status.fadeIn(500);
+                status.removeClass("badge-success");
+                status.addClass("badge-danger");
+                status.text("Offline");
+            }
+        },200);
+    </script>
+    <script>
+        var respone;
+        var dataString = "readMatkul=";
+        $.ajax({
+            type: "POST",
+            url: "https://kelompok7pweb.000webhostapp.com/progpresensi_two/Matkul.php",
+            data: dataString,
+            dataType: "JSON",
+            crossDomain: true,
+            cache: false,
+            success: function (response) {
+                $("#anjay").hide();
+                var kepala = $("#kepala");
+                kepala.append('<th scope="col">ID Matkul</th><th scope="col">Nama Matkul</th><th scope="col">Hari</th><th scope="col">Mulai Jam</th><th scope="col">Akhir Jam</th><th scope="col">Jurusan</th><th scope="col">Jumlah Pertemuan</th><th scope="col">Dosen</th><th scope="col">Action</th>')
+                $.each(response, function (i, field) {
+                    var id = field.id_matkul;
+                    var nama_mk = field.nama_matkul;
+                    var hari = field.hari;
+                    var awal = field.mulai_jam;
+                    var akhir = field.akhir_jam;
+                    var jurusan = field.jurusan;
+                    var jumlah_ptm = field.jumlah_pertemuan;
+                    var dosen = field.nama;
+                    var nip = field.nip;
+                    var isi = $("#isi2");
+                    isi.append("<tr><td>" + id + "</td><td>" + nama_mk + "</td><td> " + hari + "</td><td>" + awal + "</td><td>" + akhir + "</td><td>" + jurusan + "</td><td>" + jumlah_ptm + "</td><td>" + dosen + "(" + nip + ")" + "</td><td><button class='btn btn-info btn-sm mr-1 mb-1' onClick='Edit(" + id + ")' id='tombolEdit' data-id='" + id + "' data-toggle='modal' data-target='#exampleModalEdit' >Edit</button><button onClick='Hapus(" + id + ")' class='btn btn-danger btn-sm mb-1' >Delete</button></td></tr>");
+                });
+            }
+        });
+        var dataString = "readDosen=";
+        $.ajax({
+            type: "POST",
+            url: "https://kelompok7pweb.000webhostapp.com/progpresensi_two/Dosen.php",
+            data: dataString,
+            dataType: "JSON",
+            crossDomain: true,
+            cache: false,
+            success: function (response) {
+
+                $.each(response, function (i, field) {
+                    var nip = field.nip;
+                    var nama = field.nama;
+                    var dosen = $("#inputDosen");
+                    dosen.append("<option value='" + nip + "'>" + nip +" "+nama + "</option>")
+                });
+            }
+        });
+        function Edit(id) {
+            var dataString2 = "id_matkul=" + id + "&readMatkulParam=";
+            $.ajax({
+                type: "POST",
+                url: "https://kelompok7pweb.000webhostapp.com/progpresensi_two/Matkul.php",
+                data: dataString2,
+                dataType: "JSON",
+                crossDomain: true,
+                cache: false,
+                success: function (response) {
+                    $.each(response, function (i, field) {
+                        var id = field.id_matkul;
+                        var nama_mk = field.nama_matkul;
+                        var hari = field.hari;
+                        var awal = field.mulai_jam;
+                        var akhir = field.akhir_jam;
+                        $("#einputID").val(id);
+                        $("#einputNamaMk").val(nama_mk);
+                        $("#einputHari").val(hari);
+                        $("#einputMulai").val(awal);
+                        $("#einputAkhir").val(akhir);
+                    });
+                }
+            });
+        }
+
+        function UpdateMatkul() {
+            var in_id = $("#einputID").val();
+            var in_nama_mk = $("#einputNamaMk").val();
+            var in_hari = $("#einputHari").val();
+            var in_mulai = $("#einputMulai").val();
+            var in_akhir = $("#einputAkhir").val();
+            var dataString = "id_matkul=" + in_id + "&nama_matkul=" + in_nama_mk + "&hari=" + in_hari + "&mulai=" + in_mulai + "&akhir=" + in_akhir + "&updateMatkul";
+            if ($.trim(in_id).length > 0 & $.trim(in_nama_mk).length > 0 & in_hari != 0 & $.trim(in_mulai).length > 0 & $.trim(in_akhir).length > 0) {
+                if (in_mulai > in_akhir || in_akhir == in_mulai) {
+                    Swal.fire(
+                        'Update gagal !',
+                        'Isikan jam Mulai atau jam Akhir dengan benar !',
+                        'warning'
+                    )
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "https://kelompok7pweb.000webhostapp.com/progpresensi_two/Matkul.php",
+                        data: dataString,
+                        crossDomain: true,
+                        cache: false,
+                        success: function (data) {
+                            if (data == "matkulupdatesuccess") {
+                                Swal.fire(
+                                    'Data berhasil diupdate!',
+                                    '',
+                                    'success'
+                                ).then(function () {
+                                    location.reload();
+                                });
+                            } else if (data == "matkulupdatefailed") {
+                                Swal.fire(
+                                    'Data gagal diupdate!',
+                                    'Cek kembali !',
+                                    'error'
+                                )
+                            } else {
+                                Swal.fire(
+                                    'Data gagal diupdate!',
+                                    'Toloooooong !',
+                                    'error'
+                                );
+                            }
+                        }
+                    });
+                }
+            } else {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: 'Semua data harus diisi !',
+                    type: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+        function TambahMatkul() {
+            var in_id = $("#inputID").val();
+            var in_nama_mk = $("#inputNamaMk").val();
+            var in_hari = $("#inputHari").val();
+            var in_mulai = $("#inputMulai").val();
+            var in_akhir = $("#inputAkhir").val();
+            var in_jurusan = $("#inputJurusan").val();
+            var in_jumlah_ptm = $("#inputJumlah").val();
+            var in_dosen = $("#inputDosen").val();
+
+            var dataString = "id_matkul=" + in_id + "&nama_matkul=" + in_nama_mk + "&hari=" + in_hari + "&mulai=" + in_mulai + "&akhir=" + in_akhir + "&jurusan=" + in_jurusan + "&nip=" + in_dosen + "&jumlah_pertemuan=" + in_jumlah_ptm + "&createMatkul=";
+            console.log(dataString)
+            if ($.trim(in_id).length > 0 & $.trim(in_nama_mk).length > 0 & in_hari != 0 & $.trim(in_mulai).length > 0 & $.trim(in_akhir).length > 0 & in_jurusan != 0 & in_dosen != 0 & $.trim(in_jumlah_ptm).length > 0) {
+                if (in_mulai > in_akhir || in_mulai == in_akhir) {
+                    Swal.fire(
+                        'Data gagal ditambahkan !',
+                        'Isikan jam Mulai atau jam Akhir dengan benar !',
+                        'warning'
+                    )
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "https://kelompok7pweb.000webhostapp.com/progpresensi_two/Matkul.php",
+                        data: dataString,
+                        crossDomain: true,
+                        cache: false,
+                        success: function (data) {
+                            if (data == "matkulcreatesuccess") {
+                                Swal.fire(
+                                    'Data berhasil ditambahkan!',
+                                    '',
+                                    'success'
+                                ).then(function () {
+                                    location.reload();
+                                });
+                            } else if (data == "matkulcreatefailed") {
+                                Swal.fire(
+                                    'Data gagal ditambakan!',
+                                    'Kemungkinan : ID Matkul sudah ada, ID Matkul tidak boleh > 12 angka, Koneksi ke database gagal !',
+                                    'error'
+                                )
+                            } else {
+                                Swal.fire(
+                                    'Data gagal ditambakan!',
+                                    'tolong !',
+                                    'error'
+                                );
+                            }
+                        }
+                    });
+                }
+            }
+            else {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: 'Semua data harus diisi !',
+                    type: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            }
+            ;
+        }
+        function Hapus(id) {
+            var dataString = "id_matkul=" + id + "&deleteMatkul=";
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: 'https://kelompok7pweb.000webhostapp.com/progpresensi_two/Matkul.php',
+                        type: 'POST',
+                        data: dataString,
+                        success: function (response) {
+                            if (response == "matkuldeletesuccess") {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'Your file has been deleted.',
+                                    'success'
+                                ).then(function () {
+                                    location.reload();
+                                });
+
+                            } else {
+                                Swal.fire(
+                                    'Data gagal didelete!',
+                                    'Data ini telah terikat dengan data di tabel lainnya !',
+                                    'error'
+                                )
+                            }
+                        }
+                    });
+                }
+            })
+        }
+        $("#logout").click(function () {
+            Swal.fire(
+                'Logout berhasil!',
+                'Sampai jumpa !',
+                'success'
+            ).then(function () {
+                localStorage.removeItem("id");
+                localStorage.removeItem("level");
+                location.reload();
+            });
+
+        })
+    </script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+</body>
+
+</html>
